@@ -3,6 +3,7 @@
   <RouterLink to="/stats" class="button">Stats</RouterLink>
 
   <RouterView></RouterView>
+  test
 </template>
 
 <style>
