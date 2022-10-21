@@ -1,6 +1,5 @@
 <template>
   <nav class="navbar is-success" role="navigation" aria-label="main navigation">
-    test1
     <div class="container is-max-desktop">
       <div class="navbar-brand">
         <h1 class="navbar-item is-size-4 is-family-monospace">Vulletin</h1>
