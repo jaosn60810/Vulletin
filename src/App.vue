@@ -2,7 +2,6 @@
   <NavBar></NavBar>
 
   <RouterView></RouterView>
-  test
 </template>
 
 <script lang="ts" setup>
