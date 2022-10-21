@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar is-success" role="navigation" aria-label="main navigation">
-    <div class="container is-max-desktop">
+    <div class="container is-max-desktop px-2">
       <div class="navbar-brand">
         <h1 class="navbar-item is-size-4 is-family-monospace">Vulletin</h1>
 
@@ -40,9 +40,11 @@ const showMobileNav = ref(false);
 </script>
 
 <style scoped>
-.navbar-menu {
-  position: absolute;
-  left: 0;
-  width: 100%;
+@media (max-width: 1023px) {
+  .navbar-menu {
+    position: absolute;
+    left: 0;
+    width: 100%;
+  }
 }
 </style>
