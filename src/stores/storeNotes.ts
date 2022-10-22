@@ -1,14 +1,30 @@
 import { defineStore } from 'pinia';
 
-export const useCounterStore = defineStore('counter', {
+export const userStoreNotes = defineStore('storeNotes', {
   state: () => {
-    return { count: 0 };
+    return {
+      notes: [
+        {
+          id: 'id1',
+          content:
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem impeditliquid, saepe voluptas placeat vitae itaque illum odit. Quaera aperiam impedit, alias sapiente tenetur fugiat temporibuslestias laborum.',
+        },
+        {
+          id: 'id2',
+          content: 'Lorem ipsum dolor sit ame.',
+        },
+      ],
+    };
   },
-  // could also be defined as
-  // state: () => ({ count: 0 })
   actions: {
-    increment() {
-      this.count++;
+    addNote(newNote: string) {
+      this.notes.unshift({
+        id: new Date().getTime().toString(),
+        content: newNote,
+      });
+    },
+    deleteNote(noteId: string) {
+      this.notes = this.notes.filter((note) => note.id !== noteId);
     },
   },
 });
