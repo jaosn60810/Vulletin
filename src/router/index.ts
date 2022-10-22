@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/views/ViewNote.vue'),
   },
   {
+    path: '/editNote/:id',
+    name: 'edit-note',
+    component: () => import('@/views/ViewEditNote.vue'),
+  },
+  {
     path: '/stats',
     name: 'stats',
     component: () => import('@/views/ViewStats.vue'),
