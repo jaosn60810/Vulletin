@@ -4,6 +4,7 @@
       <div class="control">
         <label v-if="label" class="label has-text-white">{{ label }}</label>
         <textarea
+          v-auto-focus
           class="textarea"
           :placeholder="placeholder"
           ref="textAreaRef"
@@ -14,6 +15,7 @@
               ($event.target as HTMLTextAreaElement).value
             )
           "
+          maxlength="100"
         ></textarea>
       </div>
     </div>
@@ -28,6 +30,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+import { vAutoFocus } from '@/directives/vAutoFocus';
+
+// =================================================================
 
 const props = defineProps({
   modelValue: {
@@ -48,9 +54,15 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue']);
 
+// =================================================================
+
 const textAreaRef = ref<HTMLTextAreaElement | null>(null);
 
+// =================================================================
+
 const focusTextArea = () => textAreaRef.value?.focus();
+
+// =================================================================
 
 defineExpose({
   focusTextArea,
