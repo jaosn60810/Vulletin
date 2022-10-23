@@ -17,8 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { userStoreNotes } from '@/stores/storeNotes';
+
+import { useWatchCharacters } from '@/use/useWatchCharacters';
 
 import Note from '@/components/Notes/Note.vue';
 import AddEditNote from '@/components/Notes/AddEditNote.vue';
@@ -41,4 +43,8 @@ const addNote = () => {
 
   addEditNoteRef.value?.focusTextArea();
 };
+
+// =========================================
+
+useWatchCharacters(newNote);
 </script>
