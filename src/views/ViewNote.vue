@@ -12,12 +12,25 @@
       </template>
     </AddEditNote>
 
+    <progress
+      class="progress is-large is-success"
+      max="100"
+      v-if="storeNotes.isNotesLoaded"
+    ></progress>
+
     <Note v-for="note in storeNotes.notes" :key="note.id" :note="note"></Note>
+
+    <p
+      v-if="storeNotes.notes.length === 0"
+      class="is-size-4 has-text-centered has-text-grey-light is-family-monospace py-6"
+    >
+      No notes here yet...
+    </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { userStoreNotes } from '@/stores/storeNotes';
 
 import { useWatchCharacters } from '@/use/useWatchCharacters';
