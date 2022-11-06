@@ -6,6 +6,8 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '@/js/firebase';
 
@@ -15,6 +17,7 @@ interface Note {
 }
 
 const notesCollectionRef = collection(db, 'notes');
+const notesCollectionQuery = query(notesCollectionRef, orderBy('id', 'desc'));
 
 export const userStoreNotes = defineStore('storeNotes', {
   state: () => {
@@ -24,7 +27,7 @@ export const userStoreNotes = defineStore('storeNotes', {
   },
   actions: {
     async getNotes() {
-      onSnapshot(notesCollectionRef, (querySnapshot) => {
+      onSnapshot(notesCollectionQuery, (querySnapshot) => {
         let notes: Note[] = [];
         querySnapshot.forEach((doc) => {
           notes.push({ id: doc.id, content: doc.data().content });
@@ -34,8 +37,10 @@ export const userStoreNotes = defineStore('storeNotes', {
       });
     },
     async addNote(newNote: string) {
-      await setDoc(doc(notesCollectionRef, new Date().getTime().toString()), {
+      const id = new Date().getTime().toString();
+      await setDoc(doc(notesCollectionRef, id), {
         content: newNote,
+        id,
       });
     },
     async deleteNote(noteId: string) {
