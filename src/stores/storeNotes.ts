@@ -1,41 +1,63 @@
 import { defineStore } from 'pinia';
-import { collection, onSnapshot } from 'firebase/firestore';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import { db } from '@/js/firebase';
 
 interface Note {
   id: string;
   content: string;
+  date: string;
 }
+
+const notesCollectionRef = collection(db, 'notes');
+const notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'));
 
 export const userStoreNotes = defineStore('storeNotes', {
   state: () => {
     return {
       notes: [] as Note[],
+      isNotesLoaded: true,
     };
   },
   actions: {
     async getNotes() {
-      onSnapshot(collection(db, 'notes'), (querySnapshot) => {
+      onSnapshot(notesCollectionQuery, async (querySnapshot) => {
+        this.isNotesLoaded = true;
+
         let notes: Note[] = [];
         querySnapshot.forEach((doc) => {
-          notes.push({ id: doc.id, content: doc.data().content });
+          notes.push({
+            id: doc.id,
+            content: doc.data().content,
+            date: doc.data().date,
+          });
         });
-
         this.notes = notes;
+
+        this.isNotesLoaded = false;
       });
     },
-    addNote(newNote: string) {
-      this.notes.unshift({
-        id: new Date().getTime().toString(),
+    async addNote(newNote: string) {
+      await addDoc(notesCollectionRef, {
         content: newNote,
+        date: new Date().getTime().toString(),
       });
     },
-    deleteNote(noteId: string) {
-      this.notes = this.notes.filter((note) => note.id !== noteId);
+    async deleteNote(noteId: string) {
+      await deleteDoc(doc(notesCollectionRef, noteId));
     },
-    updateNote(noteId: string, newContent: string) {
-      const noteIndex = this.notes.findIndex((note) => note.id === noteId);
-      this.notes[noteIndex].content = newContent;
+    async updateNote(noteId: string, content: string) {
+      await updateDoc(doc(notesCollectionRef, noteId), {
+        content,
+      });
     },
   },
   getters: {

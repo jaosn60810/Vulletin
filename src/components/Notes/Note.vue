@@ -3,8 +3,9 @@
     <div class="card-content">
       <div class="content">
         {{ note.content }}
-        <div class="has-text-right has-text-grey-light">
-          <small>{{ characterLength }} </small>
+        <div class="columns is-mobile has-text-grey-light">
+          <small class="column">{{ dateFormatted }} </small>
+          <small class="column has-text-right">{{ characterLength }} </small>
         </div>
       </div>
     </div>
@@ -32,6 +33,8 @@
 import { computed, reactive } from 'vue';
 import { userStoreNotes } from '@/stores/storeNotes';
 
+import { useDateFormat } from '@vueuse/shared';
+
 import ModalDeleteNote from '@/components/Notes/ModalDeleteNote.vue';
 
 // =========================================
@@ -52,6 +55,11 @@ const characterLength = computed(
     `${props.note.content.length} ${
       props.note.content.length <= 1 ? `character` : `characters`
     }`
+);
+
+const dateFormatted = computed(
+  () =>
+    useDateFormat(new Date(parseInt(props.note.date)), 'YYYY-MM-DD HH:mm').value
 );
 
 // ============================================
