@@ -6,7 +6,19 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue';
+import { userStoreNotes } from '@/stores/storeNotes';
+
 import NavBar from '@/components/Layout/NavBar.vue';
+
+// =========================================
+
+const storeNotes = userStoreNotes();
+
+// =========================================
+onMounted(() => {
+  storeNotes.getNotes();
+});
 </script>
 
 <style>
