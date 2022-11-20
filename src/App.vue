@@ -7,17 +7,17 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { userStoreNotes } from '@/stores/storeNotes';
+import { userStoreAuth } from '@/stores/storeAuth';
 
 import NavBar from '@/components/Layout/NavBar.vue';
 
 // =========================================
 
-const storeNotes = userStoreNotes();
+const storeAuth = userStoreAuth();
 
 // =========================================
 onMounted(() => {
-  storeNotes.getNotes();
+  storeAuth.init();
 });
 </script>
 
