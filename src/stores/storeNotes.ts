@@ -63,7 +63,8 @@ export const userStoreNotes = defineStore('storeNotes', {
           this.notes = notes;
 
           this.isNotesLoaded = false;
-        }
+        },
+        (error) => console.error(error)
       );
     },
     async addNote(newNote: string) {
