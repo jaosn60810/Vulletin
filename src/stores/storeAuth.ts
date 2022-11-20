@@ -7,6 +7,8 @@ import {
 } from 'firebase/auth';
 import { auth } from '@/js/firebase';
 
+import { userStoreNotes } from './storeNotes';
+
 interface AuthUser {
   email: string;
   password: string;
@@ -21,19 +23,17 @@ export const userStoreAuth = defineStore('storeAuth', {
   actions: {
     init() {
       onAuthStateChanged(auth, (user) => {
+        const storeNotes = userStoreNotes();
         if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
           this.userData.id = user.uid;
           this.userData.email = user.email ?? '';
           this.router.push('/');
 
-          // ...
+          storeNotes.init();
         } else {
-          // User is signed out
-          // ...
           this.userData = { id: '', email: '' };
           this.router.replace('/auth');
+          storeNotes.clearNotes();
         }
       });
     },
@@ -44,27 +44,21 @@ export const userStoreAuth = defineStore('storeAuth', {
         credentials.password
       )
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
-
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode);
           console.log(errorMessage);
-          // ..
         });
     },
     logoutUser() {
       signOut(auth)
         .then(() => {
-          // Sign-out successful.
-          console.log('Sign-out successful');
+          alert('Sign-out successful');
         })
         .catch((error) => {
-          // An error happened.
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode);
@@ -74,10 +68,7 @@ export const userStoreAuth = defineStore('storeAuth', {
     loginUser(credentials: AuthUser) {
       signInWithEmailAndPassword(auth, credentials.email, credentials.password)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
-
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;

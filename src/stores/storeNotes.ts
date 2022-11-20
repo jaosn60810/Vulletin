@@ -8,8 +8,14 @@ import {
   updateDoc,
   query,
   orderBy,
+  Query,
+  type DocumentData,
+  type CollectionReference,
+  type Unsubscribe,
 } from 'firebase/firestore';
 import { db } from '@/js/firebase';
+
+import { userStoreAuth } from './storeAuth';
 
 interface Note {
   id: string;
@@ -17,8 +23,9 @@ interface Note {
   date: string;
 }
 
-const notesCollectionRef = collection(db, 'notes');
-const notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'));
+let notesCollectionRef: CollectionReference<DocumentData>;
+let notesCollectionQuery: Query<DocumentData>;
+let unsubscribeNotesSnapShot: Unsubscribe;
 
 export const userStoreNotes = defineStore('storeNotes', {
   state: () => {
@@ -28,22 +35,36 @@ export const userStoreNotes = defineStore('storeNotes', {
     };
   },
   actions: {
+    init() {
+      const storeAuth = userStoreAuth();
+      notesCollectionRef = collection(
+        db,
+        'users',
+        storeAuth.userData.id,
+        'notes'
+      );
+      notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'));
+      this.getNotes();
+    },
     async getNotes() {
-      onSnapshot(notesCollectionQuery, async (querySnapshot) => {
-        this.isNotesLoaded = true;
+      unsubscribeNotesSnapShot = onSnapshot(
+        notesCollectionQuery,
+        async (querySnapshot) => {
+          this.isNotesLoaded = true;
 
-        let notes: Note[] = [];
-        querySnapshot.forEach((doc) => {
-          notes.push({
-            id: doc.id,
-            content: doc.data().content,
-            date: doc.data().date,
+          let notes: Note[] = [];
+          querySnapshot.forEach((doc) => {
+            notes.push({
+              id: doc.id,
+              content: doc.data().content,
+              date: doc.data().date,
+            });
           });
-        });
-        this.notes = notes;
+          this.notes = notes;
 
-        this.isNotesLoaded = false;
-      });
+          this.isNotesLoaded = false;
+        }
+      );
     },
     async addNote(newNote: string) {
       await addDoc(notesCollectionRef, {
@@ -58,6 +79,12 @@ export const userStoreNotes = defineStore('storeNotes', {
       await updateDoc(doc(notesCollectionRef, noteId), {
         content,
       });
+    },
+    clearNotes() {
+      this.notes = [];
+      if (unsubscribeNotesSnapShot) {
+        unsubscribeNotesSnapShot();
+      }
     },
   },
   getters: {
