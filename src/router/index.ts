@@ -16,6 +16,11 @@ const routes = [
     name: 'stats',
     component: () => import('@/views/ViewStats.vue'),
   },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: () => import('@/views/ViewAuth.vue'),
+  },
 ];
 
 const router = createRouter({

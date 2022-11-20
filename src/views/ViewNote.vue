@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { userStoreNotes } from '@/stores/storeNotes';
 
 import { useWatchCharacters } from '@/use/useWatchCharacters';
@@ -59,5 +59,8 @@ const addNote = () => {
 
 // =========================================
 
+onMounted(() => {
+  storeNotes.getNotes();
+});
 useWatchCharacters(newNote);
 </script>
